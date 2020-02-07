@@ -1,0 +1,4 @@
+name: CN-DiscordBridge
+main: me.kevsal.minecraft.cn.discordbridge.DiscordBridge
+version: ${project.version}
+author: Kevinsal03/Kevinjss1

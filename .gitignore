@@ -2,3 +2,5 @@ protected.md
 ./protected
 .idea
 CN-Discord-Bridge.iml
+dependency-reduced-pom.xml
+./target
