@@ -20,22 +20,35 @@ public class ListenerChatEvent implements Listener {
     public void onChatEvent(ChatEvent e) {
         if(!e.isCancelled()) {
             //player chat not cancelled
-            if(e.isCommand()) {
-                return;
-                //TODO: Add something here?
+            String name;
+            String server;
+            if(e.getSender() instanceof ProxiedPlayer) {
+                name = ((ProxiedPlayer) e.getSender()).getDisplayName();
+                server = ((ProxiedPlayer) e.getSender()).getServer().getInfo().getName();
             } else {
-                String name;
-                String server;
-                if(e.getSender() instanceof ProxiedPlayer) {
-                    name = ((ProxiedPlayer) e.getSender()).getDisplayName();
-                    server = ((ProxiedPlayer) e.getSender()).getServer().getInfo().getName();
-                } else {
-                    name = "CONSOLE";
-                    server = "LOG";
+                name = "CONSOLE";
+                server = "LOG";
+            }
+
+            String message = e.getMessage();
+
+            if(e.isCommand()) {
+                // Build command Message embed
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor(name, null, "https://mc-heads.net/head/" + name + ".png");
+                eb.addField("Command: ", message, true);
+                eb.setFooter("Server: " + server);
+
+                TextChannel channel = null;
+                try {
+                    channel = DiscordBridge.getJDA().getTextChannelById(DiscordBridge.getConfig().getString("command-channel"));
+                    assert channel != null;
+                    channel.sendMessage(eb.build()).queue();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    plugin.getLogger().warning("Failed to send message");
                 }
-
-                String message = e.getMessage();
-
+            } else {
                 // Build Embed from message
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor(name, null, "https://mc-heads.net/head/" + name + ".png");
@@ -52,8 +65,6 @@ public class ListenerChatEvent implements Listener {
                     ex.printStackTrace();
                     plugin.getLogger().warning("Failed to send message");
                 }
-
-
             }
         }
     }
