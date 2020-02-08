@@ -1,3 +1,4 @@
 token: "CHANGE-ME"
-chat-channel: CHANGE-ME
-command-channel: CHANGE-ME
+chat-channel: "CHANGE-ME"
+command-channel: "CHANGE-ME"
+pc-role: "change me"

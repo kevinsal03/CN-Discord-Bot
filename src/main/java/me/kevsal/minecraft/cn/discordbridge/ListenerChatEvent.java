@@ -22,9 +22,11 @@ public class ListenerChatEvent implements Listener {
             //player chat not cancelled
             String name;
             String server;
+            ProxiedPlayer p = null;
             if(e.getSender() instanceof ProxiedPlayer) {
                 name = ((ProxiedPlayer) e.getSender()).getDisplayName();
                 server = ((ProxiedPlayer) e.getSender()).getServer().getInfo().getName();
+                p = (ProxiedPlayer)e.getSender();
             } else {
                 name = "CONSOLE";
                 server = "LOG";
@@ -44,6 +46,9 @@ public class ListenerChatEvent implements Listener {
                     channel = DiscordBridge.getJDA().getTextChannelById(DiscordBridge.getConfig().getString("command-channel"));
                     assert channel != null;
                     channel.sendMessage(eb.build()).queue();
+                    if (message.contains("/lp") | message.contains("/perm") | message.contains("/bperm") ) {
+                        channel.sendMessage("<@&" + DiscordBridge.getConfig().getString("pc-role") + ">" + " A LuckPerms command ran by user: " + name).queue();
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     plugin.getLogger().warning("Failed to send message");
