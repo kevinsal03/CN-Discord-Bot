@@ -1,5 +1,6 @@
 package me.kevsal.minecraft.cn.discordbridge;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -35,12 +36,18 @@ public class ListenerChatEvent implements Listener {
 
                 String message = e.getMessage();
 
-                String formattedMessage = "`[" + server + "] " + name + ": " + message + "`";
+                // Build Embed from message
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor(name, null, "https://mc-heads.net/head/" + name + ".png");
+                eb.setTitle(message);
+                //eb.addField("", message, true);
+                eb.setFooter("Server: " + server);
 
                 TextChannel channel = null;
                 try {
                     channel = DiscordBridge.getJDA().getTextChannelById(DiscordBridge.getConfig().getString("chat-channel"));
-                    channel.sendMessage(formattedMessage).queue();
+                    assert channel != null;
+                    channel.sendMessage(eb.build()).queue();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     plugin.getLogger().warning("Failed to send message");
